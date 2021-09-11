@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -14,11 +16,11 @@ import (
 
 // id, name, isbn
 var (
-	host     = "localhost"
-	port     = 5432
-	user     = "go"
-	password = "go"
-	dbname   = "library"
+	dbhost     = "localhost"
+	dbport     = "5432"
+	dbuser     = "go"
+	dbpassword = "go"
+	databasename   = "library"
 )
 
 type library struct {
@@ -35,7 +37,33 @@ const (
 )
 
 func main() {
-	lib := library{host: host, user: user, password: password, dbname: dbname, port: port}
+
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		host = dbhost
+	}
+	port := os.Getenv("DB_PORT")
+	if host == "" {
+		port = dbport
+	}
+	user := os.Getenv("DB_USER")
+	if host == "" {
+		user = dbuser
+	}
+	password := os.Getenv("DB_PASS")
+	if host == "" {
+		password = dbpassword
+	}
+	dbname:= os.Getenv("DB_NAME")
+	if host == "" {
+		dbname = databasename
+	}
+
+	intport, err := strconv.Atoi(port)
+	if err != nil {
+		panic(err)
+	}
+	lib := library{host: host, user: user, password: password, dbname: dbname, port: intport}
 	db := lib.createConnection()
 	defer db.Close()
 
@@ -43,7 +71,7 @@ func main() {
 	r.HandleFunc(API_PATH, lib.getBooks).Methods("GET")
 	r.HandleFunc(API_PATH, lib.postBooks).Methods("POST")
 	log.Print("starting server \n")
-	err := http.ListenAndServe(":8080", r)
+	err = http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatalf("while serving application %s", err.Error())
 	}
