@@ -17,7 +17,7 @@ import (
 // id, name, isbn
 var (
 	dbhost     = "localhost"
-	dbport     = "5432"
+	dbport     = "53"
 	dbuser     = "go"
 	dbpassword = "go"
 	databasename   = "library"
@@ -43,19 +43,19 @@ func main() {
 		host = dbhost
 	}
 	port := os.Getenv("DB_PORT")
-	if host == "" {
+	if port == "" {
 		port = dbport
 	}
 	user := os.Getenv("DB_USER")
-	if host == "" {
+	if user == "" {
 		user = dbuser
 	}
 	password := os.Getenv("DB_PASS")
-	if host == "" {
+	if password == "" {
 		password = dbpassword
 	}
 	dbname:= os.Getenv("DB_NAME")
-	if host == "" {
+	if dbname == "" {
 		dbname = databasename
 	}
 
@@ -64,6 +64,8 @@ func main() {
 		panic(err)
 	}
 	lib := library{host: host, user: user, password: password, dbname: dbname, port: intport}
+
+	// fmt.Printf("%+v\n",lib)
 	db := lib.createConnection()
 	defer db.Close()
 
