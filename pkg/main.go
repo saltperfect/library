@@ -17,9 +17,9 @@ import (
 // id, name, isbn
 var (
 	dbhost     = "localhost"
-	dbport     = "53"
-	dbuser     = "go"
-	dbpassword = "go"
+	dbport     = "5432"
+	dbuser     = "postgres"
+	dbpassword = "admin"
 	databasename   = "library"
 )
 
