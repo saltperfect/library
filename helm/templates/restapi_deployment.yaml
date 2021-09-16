@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: restapi
+  name: {{ include "lib.name" .}}
+  namespace: restapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restapi
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: restapi
+    spec:
+      containers:
+      - image: saltperfect/library:1.0.0
+        name: library
+        resources: {}
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: restapi-cm
+              key: host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: restapi-cm
+              key: port
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: restapi-cm
+              key: dbname
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-password
+              key: rootpassword
+status: {}
