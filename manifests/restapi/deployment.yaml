@@ -19,7 +19,7 @@ spec:
         app: restapi
     spec:
       containers:
-      - image: saltperfect/library:0.1.2
+      - image: saltperfect/library:1.0.0
         name: library
         resources: {}
         env:
